@@ -8,8 +8,6 @@
 </template>
 
 <script lang="ts" setup>
-import { withDefaults, defineProps, defineEmits } from 'vue';
-
 interface Props {
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
