@@ -1,5 +1,5 @@
 <template>
-  <dialog id="my_modal_1" class="modal" :open="openis">
+  <dialog id="my_modal_1" class="modal" :open="props.open">
     <div class="modal-box">
       <h3 class="text-lg font-bold">{{ title ?? 'Ingrese Titulo' }}</h3>
       <p class="py-4">{{ subTitle ?? 'Ingrese Sub-titulo' }}</p>
@@ -21,13 +21,13 @@
     </div>
   </dialog>
   <div
-    v-if="openis"
+    v-if="props.open"
     class="modal-backdrop fixed top-0 left-0 z-10 bg-back opacity-50 w-screen h-screen"
   ></div>
 </template>
 
 <script lang="ts" setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, watch, nextTick } from 'vue';
 
 interface Props {
   open: boolean;
@@ -36,20 +36,27 @@ interface Props {
   subTitle?: string;
 }
 
-const { open: openis } = defineProps<Props>();
+const props = defineProps<Props>();
 
 const _emits = defineEmits<{
   close: [void];
   valueInput: [text: string];
 }>();
 
-const inputValue = ref<string>('');
-const inputRef = ref<HTMLInputElement | null>(null);
+const inputValue = ref<string>(''); // esto es para manejar el valor del input
+const inputRef = ref<HTMLInputElement | null>(null); // esto es para manter una referencia al elemento del document
+
+watch(props, async ({ open }) => {
+  if (open) {
+    await nextTick(); // espera a que el DOM se renderice
+    inputRef.value?.focus();
+  }
+});
 
 const submit = () => {
   console.log('submit', inputValue.value);
   if (inputValue.value) {
-    _emits('valueInput', inputValue.value.trim());
+    _emits('valueInput', inputValue.value.trim()); // emite el valor fguera del formulario
     _emits('close');
     inputValue.value = '';
   } else {

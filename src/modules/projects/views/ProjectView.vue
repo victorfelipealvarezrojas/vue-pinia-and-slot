@@ -5,18 +5,19 @@
       <thead>
         <tr>
           <th></th>
-          <th>Proyecto</th>
           <th>Tareas</th>
           <th>Avance</th>
         </tr>
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr>
-          <th>1</th>
-          <td>Notion</td>
+        <tr v-for="(pjct, index) in projectList" :key="pjct.id">
+          <td>{{ index + 1 }}</td>
+          <td>{{ pjct.name }}</td>
           <td>10</td>
-          <td>90%</td>
+          <td>
+            <progress class="progress progress-primary w-56" value="10" max="100"></progress>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -56,16 +57,25 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
 import FabButton from '@/modules/common/components/FabButton.vue';
 import AddCircle from '@/modules/common/icons/AddCircle.vue';
 import inputModal from '@/modules/common/components/InputModal.vue';
-import { ref } from 'vue';
 import CustomModal from '@/modules/common/components/CustomModal.vue';
+import { useProjectStore } from '../store/projects.store';
 
 const modalOpen = ref<boolean>(false);
 const modalOpen2 = ref<boolean>(false);
 
+const { projectList, addProyect } = useProjectStore();
+
 const onNewValue = (proyectName: string) => {
-  console.log('onNewValue', proyectName);
+  projectList.push({
+    id: '3',
+    name: proyectName,
+    tasks: [],
+  });
+
+  addProyect(proyectName);
 };
 </script>

@@ -8,7 +8,7 @@
       <sideMenu />
 
       <!-- Router View -->
-      <router-view />
+      <RouterView />
     </main>
   </div>
 </template>
